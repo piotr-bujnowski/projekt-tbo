@@ -1,0 +1,59 @@
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  sast-tests:
+    name: Run SAST Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Execute gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Bandit Package
+        if: always()
+        run: pip3 install bandit
+      - name: Run Bandit
+        run: bandit -r .
+
+  dast-tests:
+    name: Run DAST Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Perform ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: ${{ secrets.SERVER_URI }}
+          allow_issue_writing: false
+
+  sca-tests:
+    name: Run SCA Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Execute Dependency Check
+        uses: dependency-check/Dependency-Check_Action@v3
+        with:
+          project: "projekt-tbo"
+          path: "."
+          format: "HTML"
+          out: "reports"
+
+      - name: Upload Dependency Check Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: Dependency Check Report
+          path: ${{ github.workspace }}/reports
