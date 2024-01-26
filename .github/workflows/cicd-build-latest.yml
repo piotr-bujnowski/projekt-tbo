@@ -34,8 +34,8 @@ jobs:
     name: Compose and Run DAST scans (ZAP)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v4
       - name: Build image
         run: docker-compose up -d
       - name: ZAP scans
@@ -72,7 +72,7 @@ jobs:
     needs: [sast-tests, dast-tests, sca-tests]
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout the repo
+        - name: Checkout Repository
           uses: actions/checkout@v4
 
         - name: Login to Docker Hub
