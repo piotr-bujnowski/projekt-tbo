@@ -6,7 +6,6 @@ on:
       - master
       - main
     types: [opened, reopened, edited]
-  workflow_dispatch:
 
 jobs:
   sast-tests:
