@@ -1,6 +1,6 @@
 on:
   push:
-    branches:
+    branches-ignore:
       - master
   workflow_dispatch:
 
@@ -22,18 +22,18 @@ jobs:
         run: bandit -r .
 
   dast-tests:
-    name: Run DAST scans (ZAP) after compose
+    name: Compose and Run DAST scans (ZAP)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Build image
         run: docker-compose up -d
-      - name: ZAP Scan
+      - name: ZAP scans
         uses: zaproxy/action-baseline@v0.10.0
         with:
             docker_name: 'owasp/zap2docker-stable'
-            target: 'http://localhost:80/'
+            target: 'http://localhost:8080/'
             rules_file_name: '.zap/rules.tsv'
             cmd_options: '-a'
 
@@ -59,7 +59,7 @@ jobs:
           path: ${{ github.workspace }}/reports
 
   build:
-    name: Build image
+    name: Build and push docker image
     needs: [sast-tests, dast-tests, sca-tests]
     runs-on: ubuntu-latest
     steps:
