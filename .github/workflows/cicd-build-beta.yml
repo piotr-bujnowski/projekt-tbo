@@ -1,12 +1,10 @@
 name: Build beta
 
 on:
-  push:
-    branches-ignore:
-      - master
   pull_request:
-    branches-ignore:
-      - master
+    branches:
+      - '*'
+      - '!main'
   workflow_dispatch:
 
 jobs:
