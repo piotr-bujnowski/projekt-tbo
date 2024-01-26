@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run pytest
-        run: pytest
+        run: python -m pytest
 
   build:
     name: Build and push beta image

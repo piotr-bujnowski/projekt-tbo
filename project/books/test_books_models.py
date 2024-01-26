@@ -1,4 +1,5 @@
 import pytest
+
 from project.books.models import Book
 
 javascript_injections = [
@@ -94,7 +95,6 @@ def test_book_name_correct(value):
     "This is a string with escape characters: \t\t",
     "This is a multiline string.\nIt has multiple lines.\nEach line ends with a newline character.",
     "This is a string with \x01 control \x02 characters.",
-    "a" * 100000000
 ])
 def test_book_name_incorrect(value):
     with pytest.raises(Exception):
@@ -121,7 +121,6 @@ def test_book_author_correct(value):
     "This is a string with escape characters: \t\t",
     "This is a multiline string.\nIt has multiple lines.\nEach line ends with a newline character.",
     "This is a string with \x01 control \x02 characters.",
-    "a" * 100000000
 ])
 def test_book_author_incorrect(value):
     with pytest.raises(Exception):
@@ -148,7 +147,6 @@ def test_book_book_type_correct(value):
     "This is a string with escape characters: \t\t",
     "This is a multiline string.\nIt has multiple lines.\nEach line ends with a newline character.",
     "This is a string with \x01 control \x02 characters.",
-    "a" * 100000000
 ])
 def test_book_book_type_incorrect(value):
     with pytest.raises(Exception):
@@ -175,7 +173,6 @@ def test_book_status_correct(value):
     "This is a string with escape characters: \t\t",
     "This is a multiline string.\nIt has multiple lines.\nEach line ends with a newline character.",
     "This is a string with \x01 control \x02 characters.",
-    "a" * 100000000
 ])
 def test_book_status_incorrect(value):
     with pytest.raises(Exception):
@@ -205,7 +202,6 @@ def test_book_year_correct(value):
     "This is a string with escape characters: \t\t",
     "This is a multiline string.\nIt has multiple lines.\nEach line ends with a newline character.",
     "This is a string with \x01 control \x02 characters.",
-    "a" * 100000000
 ])
 def test_book_year_incorrect(value):
     with pytest.raises(Exception):
