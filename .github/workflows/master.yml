@@ -1,85 +1,85 @@
-# on:
-#   push:
-#     branches:
-#       - master
-#   workflow_dispatch:
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
 
-# jobs:
-#   sast-tests:
-#     name: Run SAST scans (gitleaks)
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout Repository
-#         uses: actions/checkout@v4
-#       - name: Execute gitleaks
-#         uses: gitleaks/gitleaks-action@v2
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       - name: Install Bandit Package
-#         if: always()
-#         run: pip3 install bandit
-#       - name: Run Bandit
-#         run: bandit -r .
+jobs:
+  sast-tests:
+    name: Run SAST scans (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Execute gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Bandit Package
+        if: always()
+        run: pip3 install bandit
+      - name: Run Bandit
+        run: bandit -r .
 
-#   dast-tests:
-#     name: Run DAST scans (ZAP) after compose
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-#       - name: Build image
-#         run: docker-compose up -d
-#       - name: ZAP Scan
-#         uses: zaproxy/action-baseline@v0.10.0
-#         with:
-#             docker_name: 'owasp/zap2docker-stable'
-#             target: 'http://localhost:80/'
-#             rules_file_name: '.zap/rules.tsv'
-#             cmd_options: '-a'
+  dast-tests:
+    name: Run DAST scans (ZAP) after compose
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build image
+        run: docker-compose up -d
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.10.0
+        with:
+            docker_name: 'owasp/zap2docker-stable'
+            target: 'http://localhost:80/'
+            rules_file_name: '.zap/rules.tsv'
+            cmd_options: '-a'
 
-#   sca-tests:
-#     name: Run SCA scans (dependency-check)
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout Repository
-#         uses: actions/checkout@v4
+  sca-tests:
+    name: Run SCA scans (dependency-check)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-#       - name: Run dependency-check
-#         uses: dependency-check/Dependency-Check_Action@main
-#         with:
-#           project: "projekt-tbo"
-#           path: "."
-#           format: "HTML"
-#           out: "reports"
+      - name: Run dependency-check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: "projekt-tbo"
+          path: "."
+          format: "HTML"
+          out: "reports"
 
-#       - name: Send Dependency Check Results
-#         uses: actions/upload-artifact@v2
-#         with:
-#           name: Dependency Check Report
-#           path: ${{ github.workspace }}/reports
+      - name: Send Dependency Check Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: Dependency Check Report
+          path: ${{ github.workspace }}/reports
 
-#   build:
-#     name: Build image
-#     needs: [sast-tests, dast-tests, sca-tests]
-#     runs-on: ubuntu-latest
-#     steps:
-#         - name: Checkout the repo
-#           uses: actions/checkout@v4
+  build:
+    name: Build image
+    needs: [sast-tests, dast-tests, sca-tests]
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout the repo
+          uses: actions/checkout@v4
 
-#         - name: Login to Docker Hub
-#           uses: docker/login-action@v3
-#           with:
-#               username: ${{ secrets.DOCKER_USERNAME }}
-#               password: ${{ secrets.DOCKER_PASSWORD }}
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+              username: ${{ secrets.DOCKER_USERNAME }}
+              password: ${{ secrets.DOCKER_PASSWORD }}
 
-#         - name: Set up Docker Buildx
-#           uses: docker/setup-buildx-action@v3
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
 
-#         - name: Build and push
-#           uses: docker/build-push-action@v5
-#           with:
-#               context: .
-#               file: ./Dockerfile
-#               push: true
-#               tags: ${{ secrets.DOCKER_USERNAME }}/projekt_tbo:beta
+        - name: Build and push
+          uses: docker/build-push-action@v5
+          with:
+              context: .
+              file: ./Dockerfile
+              push: true
+              tags: ${{ secrets.DOCKER_USERNAME }}/projekt_tbo:beta
 
