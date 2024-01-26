@@ -6,7 +6,7 @@ on:
 
 jobs:
   sast-tests:
-    name: Run SAST Tests
+    name: Run SAST scans (gitleaks)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -21,32 +21,8 @@ jobs:
       - name: Run Bandit
         run: bandit -r .
 
-  build:
-        name: Build image
-        # needs: [sast-tests, dast-tests, sca-tests]
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout the repo
-              uses: actions/checkout@v4
-
-            - name: Login to Docker Hub
-              uses: docker/login-action@v3
-              with:
-                  username: ${{ secrets.DOCKER_USERNAME }}
-                  password: ${{ secrets.DOCKER_PASSWORD }}
-
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3
-
-            - name: Build and push
-              uses: docker/build-push-action@v5
-              with:
-                  context: .
-                  file: ./Dockerfile
-                  push: true
-                  tags: ${{ secrets.DOCKER_USERNAME }}/projekt_tbo:beta
-
   dast-tests-zap:
+    name: Run DAST scans (ZAP) after compose
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -62,7 +38,7 @@ jobs:
             cmd_options: '-a'
 
   sca-tests:
-    name: Run SCA Tests
+    name: Run SCA scans (dependency-check)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -81,4 +57,29 @@ jobs:
         with:
           name: Dependency Check Report
           path: ${{ github.workspace }}/reports
+
+  build:
+    name: Build image
+    # needs: [sast-tests, dast-tests, sca-tests]
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout the repo
+          uses: actions/checkout@v4
+
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+              username: ${{ secrets.DOCKER_USERNAME }}
+              password: ${{ secrets.DOCKER_PASSWORD }}
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+
+        - name: Build and push
+          uses: docker/build-push-action@v5
+          with:
+              context: .
+              file: ./Dockerfile
+              push: true
+              tags: ${{ secrets.DOCKER_USERNAME }}/projekt_tbo:beta
 
