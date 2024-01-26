@@ -85,4 +85,4 @@ jobs:
               file: ./Dockerfile
               push: true
               tags: ${{ secrets.DOCKER_USERNAME }}/projekt_tbo:beta
-
+#pr test
