@@ -1,0 +1,28 @@
+name:  Run SCA scans (dependency-check)
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  sca-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run dependency-check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: "projekt-tbo"
+          path: "."
+          format: "HTML"
+          out: "reports"
+
+      - name: Send Dependency Check Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: Dependency Check Report
+          path: ${{ github.workspace }}/reports

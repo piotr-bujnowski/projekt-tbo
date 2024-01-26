@@ -1,0 +1,23 @@
+name: Run DAST scans (ZAP) after compose
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  dast-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build image
+        run: docker-compose up -d
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.10.0
+        with:
+            docker_name: 'owasp/zap2docker-stable'
+            target: 'http://localhost:80/'
+            rules_file_name: '.zap/rules.tsv'
+            cmd_options: '-a'
