@@ -2,11 +2,8 @@ name: Build beta
 
 on:
   push:
-    branches-ignore:
-        - master
-  pull_request:
-    branches-ignore:
-        - master
+      branches-ignore:
+          - master
   workflow_dispatch:
 
 jobs:
