@@ -1,9 +1,15 @@
 name: Build beta
 
 on:
+  pull_request:
+    types: [opened, reopened, edited]
+    branches-ignore:
+      - master
+      - main
   push:
     branches-ignore:
       - master
+      - main
   workflow_dispatch:
 
 jobs:
@@ -85,4 +91,3 @@ jobs:
               file: ./Dockerfile
               push: true
               tags: ${{ secrets.DOCKER_USERNAME }}/projekt_tbo:beta
-

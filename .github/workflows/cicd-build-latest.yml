@@ -2,7 +2,15 @@ name: Build latest on "master"
 
 on:
   pull_request:
-      types: [opened, reopened, edited] # run cicd on pr
+    types: [opened, reopened, edited]
+    branches:
+      - master
+      - main
+  push:
+   branches:
+     - master
+     - main
+  workflow_dispatch:
 
 jobs:
   sast-tests:
@@ -82,5 +90,4 @@ jobs:
               context: .
               file: ./Dockerfile
               push: true
-              tags: ${{ secrets.DOCKER_USERNAME }}/projekt_tbo:beta
-
+              tags: ${{ secrets.DOCKER_USERNAME }}/projekt_tbo:latest
