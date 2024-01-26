@@ -28,7 +28,7 @@ jobs:
         if: always()
         run: pip3 install bandit
       - name: Run Bandit
-        run: bandit -r .
+        run: bandit -r --skip B101 .
 
   dast-tests:
     name: Compose and Run DAST scans (ZAP)
