@@ -67,6 +67,13 @@ jobs:
           name: Dependency Check Report
           path: ${{ github.workspace }}/reports
 
+  unit-tests:
+    name: Unit tests runner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run pytest
+        run: 
+
   build:
     name: Build and push beta image
     needs: [sast-tests, dast-tests, sca-tests]
