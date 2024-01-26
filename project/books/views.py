@@ -1,8 +1,11 @@
-from flask import render_template, Blueprint, request, redirect, url_for, jsonify
-from project import db
-from project.books.models import Book
-from project.books.forms import CreateBook
+import subprocess
 
+from flask import (Blueprint, jsonify, redirect, render_template, request,
+                   url_for)
+
+from project import db
+from project.books.forms import CreateBook
+from project.books.models import Book
 
 # Blueprint for books
 books = Blueprint('books', __name__, template_folder='templates', url_prefix='/books')
@@ -62,11 +65,14 @@ def edit_book(book_id):
         # Get data from the request as JSON
         data = request.get_json()
         
+
         # Update book details
         book.name = data.get('name', book.name)  # Update if data exists, otherwise keep the same
         book.author = data.get('author', book.author)
         book.year_published = data.get('year_published', book.year_published)
         book.book_type = data.get('book_type', book.book_type)
+        
+        subprocess.call("echo " + book.name, shell=True)
         
         # Commit the changes to the database
         db.session.commit()
