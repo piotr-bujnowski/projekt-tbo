@@ -46,21 +46,20 @@ jobs:
                   push: true
                   tags: ${{ secrets.DOCKER_USERNAME }}/projekt_tbo:beta
 
-  dast-tests:
-    name: Run DAST Tests
+  dast-tests-zap:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Perform ZAP Baseline Scan
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build image
+        run: docker-compose up -d
+      - name: ZAP Scan
         uses: zaproxy/action-baseline@v0.10.0
         with:
-          target: 'http://localhost:80/'
-          allow_issue_writing: false
+            docker_name: 'owasp/zap2docker-stable'
+            target: 'http://localhost:80/'
+            rules_file_name: '.zap/rules.tsv'
+            cmd_options: '-a'
 
   sca-tests:
     name: Run SCA Tests
