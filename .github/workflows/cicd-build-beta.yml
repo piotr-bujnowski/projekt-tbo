@@ -1,6 +1,11 @@
 name: Build beta
 
 on:
+  pull_request:
+    types: [opened, reopened, edited]
+    branches-ignore:
+      - master
+      - main
   push:
     branches-ignore:
       - master
