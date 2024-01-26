@@ -1,7 +1,9 @@
-from flask import render_template, Blueprint, request, redirect, url_for, jsonify
+from flask import (Blueprint, jsonify, redirect, render_template, request,
+                   url_for)
+from sqlalchemy import text
+
 from project import db
 from project.customers.models import Customer
-
 
 # Blueprint for customers
 customers = Blueprint('customers', __name__, template_folder='templates', url_prefix='/customers')
@@ -39,7 +41,7 @@ def create_customer():
 
     try:
         # Add the new customer to the session and commit to save to the database
-        db.session.add(new_customer)
+        db.session.execute(text("INSERT INTO CUSTOMERS (NAME, CITY, AGE) VALUES ('" + data['name'] + "','" + data['city'] + "',"+ data['age'] + ")"))
         db.session.commit()
         print('Customer added succesfully')
         return redirect(url_for('customers.list_customers'))
