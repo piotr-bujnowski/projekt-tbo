@@ -1,13 +1,12 @@
 import os
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 
+from flask import Flask
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
 # Database Setup
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'supersecret' # To allow us to use forms
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -18,9 +17,9 @@ db = SQLAlchemy(app)
 Migrate(app, db)
 
 
+from project.books.views import books
 # Register Blueprints
 from project.core.views import core
-from project.books.views import books
 from project.customers.views import customers
 from project.loans.views import loans
 
