@@ -21,7 +21,7 @@ jobs:
       - name: Run Bandit
         run: bandit -r .
 
-  dast-tests-zap:
+  dast-tests:
     name: Run DAST scans (ZAP) after compose
     runs-on: ubuntu-latest
     steps:
