@@ -62,7 +62,7 @@ jobs:
           path: ${{ github.workspace }}/reports
 
   build:
-    name: Build and push docker image
+    name: Build and push beta image
     needs: [sast-tests, dast-tests, sca-tests]
     runs-on: ubuntu-latest
     steps:
