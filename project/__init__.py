@@ -17,6 +17,7 @@ db = SQLAlchemy(app)
 Migrate(app, db)
 
 
+
 from project.books.views import books
 # Register Blueprints
 from project.core.views import core
