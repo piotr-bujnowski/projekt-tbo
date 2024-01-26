@@ -87,4 +87,4 @@ jobs:
               push: true
               tags: ${{ secrets.DOCKER_USERNAME }}/projekt_tbo:latest
 
-              #small change to test pr
+              #small change to test prr
