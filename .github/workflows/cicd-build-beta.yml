@@ -2,8 +2,9 @@ name: Build beta
 
 on:
   push:
-      branches-ignore:
-          - master
+    branches-ignore:
+      - master
+      - main
   workflow_dispatch:
 
 jobs:
