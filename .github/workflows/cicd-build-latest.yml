@@ -2,10 +2,8 @@ name: Build latest on "master"
 
 on:
   pull_request:
-    branches:
-      - master
-      - main
     types: [opened, reopened, edited]
+  workflow_dispatch:
 
 jobs:
   sast-tests:
