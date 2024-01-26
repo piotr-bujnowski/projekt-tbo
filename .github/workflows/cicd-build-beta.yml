@@ -71,6 +71,9 @@ jobs:
     name: Unit tests runner
     runs-on: ubuntu-latest
     steps:
+      - name: Install pytest
+        run: pip3 install pytest
+
       - name: Run pytest
         run: python -m pytest
 
